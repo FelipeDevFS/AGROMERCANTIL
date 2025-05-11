@@ -1,11 +1,39 @@
 # AgroMercantil
 
-Projeto desenvolvido como parte da avaliação técnica para a vaga de Desenvolvedor Front-End. Este projeto implementa um sistema de gestão de produtos agrícolas, com um frontend em React e um backend em Django, conforme os requisitos do desafio técnico.
+Projeto desenvolvido como parte da avaliação técnica para a vaga de Desenvolvedor Front‑End, implementando um sistema de gestão de produtos agrícolas com frontend em React e backend em Django.
+
+## Repositório
+
+O código-fonte completo está disponível em:
+
+- https://github.com/FelipeDevFS/AGROMERCANTIL
 
 ## Estrutura do Projeto
 
-- `agro-frontend/`: Contém a aplicação React para a interface do usuário.
-- `agro-backend/`: Contém a API em Django para gerenciar os produtos.
+```
+agro-frontend/      # Aplicação React para interface do usuário
+├── public/
+├── src/
+│   ├── api.js           # Configuração do Axios com interceptor
+│   ├── App.js           # Componente principal com roteamento
+│   ├── ProductList.js   # Componente para listar e gerenciar produtos
+│   ├── Login.js         # Componente para autenticação
+│   └── components/      # Componentes de UI (modais, botões etc.)
+└── package.json
+
+agro-backend/       # API em Django para gerenciar produtos
+├── manage.py
+├── requirements.txt
+├── backend/
+│   ├── settings.py      # Configurações do Django (incluindo CORS e JWT)
+│   └── urls.py          # Rotas principais da API
+├── products/
+│   ├── models.py        # Modelo Product
+   ├── views.py         # Views da API (List, Create, Delete)
+   ├── urls.py          # Rotas da app products
+   └── tests.py         # Testes unitários da API
+└── <outros arquivos Django>
+```
 
 ## Pré-requisitos
 
@@ -18,17 +46,17 @@ Antes de começar, certifique-se de ter instalado:
 
 ## Como Executar
 
-### Back-End (Django)
+### Back‑End (Django)
 
 1. Clone o repositório e entre na pasta:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/FelipeDevFS/AGROMERCANTIL.git
    cd agro-backend
    ```
 2. Ative o ambiente virtual:
    - No Windows:
      ```bash
-     venv\Scripts\activate
+     venv\Scriptsctivate
      ```
    - No Linux/macOS:
      ```bash
@@ -38,11 +66,11 @@ Antes de começar, certifique-se de ter instalado:
    ```bash
    pip install -r requirements.txt
    ```
-   > Se o arquivo `requirements.txt` não existir, gere-o com:
+   > Se `requirements.txt` não existir, gere-o:
    > ```bash
    > pip freeze > requirements.txt
    > ```
-4. Aplique as migrações para criar o banco de dados:
+4. Aplique as migrações:
    ```bash
    python manage.py migrate
    ```
@@ -50,15 +78,24 @@ Antes de começar, certifique-se de ter instalado:
    ```bash
    python manage.py seed_data
    ```
-6. Inicie o servidor Django:
+6. Crie um superusuário para testes:
+   ```bash
+   python manage.py createsuperuser
+   ```
+7. Inicie o servidor Django:
    ```bash
    python manage.py runserver
    ```
-   O back-end estará disponível em: `http://127.0.0.1:8000/`
+   O back‑end estará disponível em: `http://127.0.0.1:8000/`
 
-### Front-End (React)
+8. (Opcional) Execute os testes unitários do backend:
+   ```bash
+   python manage.py test
+   ```
 
-1. Navegue até a pasta do front-end:
+### Front‑End (React)
+
+1. Navegue até a pasta do front‑end:
    ```bash
    cd agro-frontend
    ```
@@ -70,49 +107,64 @@ Antes de começar, certifique-se de ter instalado:
    ```bash
    npm start
    ```
-   O front-end estará disponível em: `http://localhost:3000/`
-
-4. (Opcional) Execute os testes unitários:
+   O front‑end estará disponível em: `http://localhost:3000/`
+4. (Opcional) Execute os testes unitários do frontend:
    ```bash
    npm test
    ```
 
-## Progresso
+## Progresso e Competências
 
-### Questão 1: Construção da Interface em React - ✅ Concluída
+### Questão 1: Interface em React — ✅ Concluída
+- Construção da interface usando React e Bootstrap.
+- Tabela de produtos, criação e exclusão via modal de confirmação.
+- Dados mockados inicialmente, substituídos pela API.
 
-- Implementei a interface com React, usando Bootstrap para estilização inicial.
-- A interface inclui uma tabela de produtos, um botão para adicionar novos produtos e um modal de confirmação para exclusão.
-- Inicialmente, usei dados mockados, que foram substituídos pela API real na Questão 2.
+### Questão 2: Integração Front‑End e Back‑End — ✅ Concluída
+- API em Django com endpoints para listar, adicionar e excluir produtos.
+- Validações no backend para campos obrigatórios.
+- Configuração de CORS para comunicação entre frontend e backend.
+- Integração via `fetch` e testes unitários da API.
 
-### Questão 2: Integração Front-End e Back-End - ✅ Concluída
+### Questão 3: Testes de Componentes em React — ✅ Concluída
+- Testes unitários com Jest e React Testing Library.
+- Cobertura de renderização, adição e exclusão de produtos.
+- Uso de mocks para simular chamadas à API.
 
-- Criei uma API em Django com endpoints para listar, adicionar e excluir produtos.
-- Adicionei validações para impedir produtos sem nome ou preço.
-- Configurei o CORS para permitir a comunicação entre o frontend e o backend.
-- A integração com o frontend foi feita usando `fetch`.
-- Escrevi testes unitários para a API e adicionei um script para popular o banco de dados.
+### Questão 4: Autenticação e Autorização — ✅ Concluída
+- Implementação de JWT no Django com `djangorestframework-simplejwt`.
+- Proteção das rotas de API com `permissions.IsAuthenticated`.
+- Endpoint `/api/login/` para emissão de tokens JWT.
+- Interceptor Axios no frontend para gerenciar header `Authorization`.
+- Rotas seguras com `react-router-dom` para `/login` e `/products`.
 
-### Questão 3: Teste de Componentes em React - ✅ Concluída
+> **Desafios e Soluções**
+> - *Erro de migração* (`no such table: auth_user`): resolvido executando `python manage.py migrate` até completar todas as migrações.
+> - *Problema de 401 no frontend*: implementado interceptor no Axios para anexar token JWT nas requisições.
+> - *Alerts nativos para erros*: planejado substituí-los por modais personalizados para melhorar UX.
 
-- Escrevi testes unitários para o componente `ProductList` usando Jest e Testing Library.
-- Os testes cobrem a renderização da tabela, exclusão e adição de produtos.
-- Usei mocks para simular chamadas à API.
+### Próximas Tarefas — ☐ Em Andamento
+- **Questão 5: Estilização Responsiva** — Adaptar telas para diferentes tamanhos.
+- **Questão 6: Gerenciamento de Estado Global** — Avaliar Context API ou Redux.
+- **Questão 7: Implementação de Cache** — Cache de resultados no backend (Redis/Django cache).
+- **Questão 8: Otimização de Performance** — Lazy loading e memoization no frontend.
+- **Questão 9: Monitoramento e Logs** — Configurar Sentry e logs estruturados no backend.
+- **Questão 10: Deploy em Produção** — Dockerização e CI/CD.
+- **Desafio Extra**: Deploy com Docker Compose e documentação de infraestrutura.
 
-## Estrutura de Diretórios
+## Decisões Técnicas
+- **Axios com Interceptor**: centraliza requisições HTTP, gerencia `Authorization` e trata erros globalmente.
+- **React Router**: controla rotas públicas e privadas (login vs. área de produtos).
+- **Testing Library & Jest**: foco em testes de integração de componentes e lógica de autenticação.
 
-```
-agro-frontend/
-├── public/
-├── src/
-└── package.json
+## Testes
 
-agro-backend/
-├── manage.py
-├── requirements.txt
-└── <outros arquivos Django>
-```
+- **Backend**: testes unitários em `products/tests.py` cobrindo CRUD de produtos.
+- **Frontend**: testes em `agro-frontend/src/__tests__/` cobrindo fluxo de login e gestão de produtos.
 
 ## Contato
 
-Em caso de dúvidas, entre em contato pelo email: seu.email@dominio.com
+Em caso de dúvidas ou sugestões, entre em contato:
+
+- Email: `felipeolcarvalho1@gmail.com`
+- GitHub: https://github.com/FelipeDevFS/AGROMERCANTIL

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { FaPlus, FaTrash, FaLeaf } from "react-icons/fa";
-import api from './api'; // Importa o axios configurado
+import { FaPlus, FaTrash, FaLeaf, FaSignOutAlt } from "react-icons/fa"; // Adiciona FaSignOutAlt
+import api from './api';
 import "./components/modal.css";
+import Modal from './components/modal'; // Corrige o caminho do import (assumindo que está em src/components/Modal.js)
 
 function ProductList({ onLogout }) {
   const [products, setProducts] = useState([]);
@@ -10,6 +11,8 @@ function ProductList({ onLogout }) {
   const [newProduct, setNewProduct] = useState({ name: "", price: "" });
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -19,6 +22,8 @@ function ProductList({ onLogout }) {
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
+        setErrorMessage('Erro ao buscar produtos. Tente novamente mais tarde.');
+        setErrorModalVisible(true);
         setLoading(false);
       }
     };
@@ -59,6 +64,8 @@ function ProductList({ onLogout }) {
       closeDeleteModal();
     } catch (error) {
       console.error("Erro ao excluir produto:", error);
+      setErrorMessage('Erro ao excluir o produto. Tente novamente.');
+      setErrorModalVisible(true);
     }
   };
 
@@ -78,6 +85,8 @@ function ProductList({ onLogout }) {
         document.body.classList.remove("modal-open");
       } catch (error) {
         console.error("Erro ao adicionar produto:", error);
+        setErrorMessage('Erro ao adicionar o produto. Verifique os dados e tente novamente.');
+        setErrorModalVisible(true);
       }
     }
   };
@@ -87,6 +96,11 @@ function ProductList({ onLogout }) {
       style: "currency",
       currency: "BRL",
     });
+  };
+
+  const closeErrorModal = () => {
+    setErrorModalVisible(false);
+    setErrorMessage('');
   };
 
   return (
@@ -99,7 +113,6 @@ function ProductList({ onLogout }) {
           </div>
           <p className="header-subtitle">Sistema de Gestão de Produtos Agrícolas</p>
         </div>
-        <button className="logout-button" onClick={onLogout}>Sair</button>
       </header>
 
       <main className="product-main">
@@ -221,6 +234,20 @@ function ProductList({ onLogout }) {
           </div>
         </div>
       )}
+
+      {/* Modal de Erro */}
+      <Modal
+        isOpen={errorModalVisible}
+        onClose={closeErrorModal}
+        message={errorMessage}
+      />
+
+      {/* Botão de Logout no final da página */}
+      <footer className="logout-footer">
+        <button className="logout-button" onClick={onLogout}>
+          <FaSignOutAlt className="logout-icon" /> Logout
+        </button>
+      </footer>
     </div>
   );
 }

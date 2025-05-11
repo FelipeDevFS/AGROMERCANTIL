@@ -100,36 +100,65 @@
   gap: 12px;
   padding: 10px;
   border-top: 1px solid #e0e0e0;
+  justify-content: center; /* Centraliza os botões */
 }
 
 .cancel-button {
-  background-color: #f2f2f2;
-  color: #333;
-  border: 1px solid #ccc;
+  background-color: #6c757d; /* Cinza escuro para "Cancelar", neutro */
+  color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  width: 100px;
-  height: 37px;
+  transition: background-color 0.2s ease;
+  width: 120px; /* Tamanho fixo para consistência */
+  height: 40px; /* Altura ajustada */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .delete-button {
-  background-color: #d32f2f;
+  background-color: #d32f2f; /* Vermelho para "Excluir" e "Confirmar" */
   color: white;
   border: none;
-  border-radius: 0.25rem;
-  padding: 0.375rem;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+  width: 120px; /* Mesmo tamanho do cancel-button */
+  height: 40px; /* Mesma altura */
   display: flex;
-  flex-direction: row-reverse;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px; /* Ajustado o gap para melhor espaçamento */
 }
 
 .cancel-button:hover {
-  background-color: #e0e0e0;
-  border-color: #bbb;
+  background-color: #5a6268; /* Tom mais escuro de cinza para hover */
+}
+
+.delete-button:hover {
+  background-color: #b20c0c; /* Tom mais escuro de vermelho para hover */
+}
+
+/* Ajuste para o botão "Fechar" no modal de erro */
+.modal-footer .cancel-button {
+  background-color: #6c757d; /* Mantém o cinza para "Fechar" no modal de erro */
+  color: white;
+  border: none;
+}
+
+.modal-footer .cancel-button:hover {
+  background-color: #5a6268; /* Mesmo hover do cancel-button */
+}
+
+/* Estilo específico para o botão "Adicionar" no modal de adição */
+.add-button.full-width {
+  background-color: #28a745; /* Verde para "Adicionar" */
+  color: white;
+  border: none;
+}
+
+.add-button.full-width:hover {
+  background-color: #218838; /* Verde mais escuro para hover */
 }
