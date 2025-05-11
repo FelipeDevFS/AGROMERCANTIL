@@ -3,6 +3,13 @@
 # Arquivos e pastas gerados pelo Python/Django
 __pycache__/
 *.pyc
+db.sqlite3
+__pycache__/
+*.pyc
+agro-frontend/node_modules/
+venv/
+env/
+*.log
 
 # Arquivos de ambiente virtual
 venv/
