@@ -1,102 +1,93 @@
-import { useState, useEffect } from "react"
-import { FaPlus, FaTrash, FaLeaf } from "react-icons/fa"
-import "./components/modal.css"
+import { useState, useEffect } from "react";
+import { FaPlus, FaTrash, FaLeaf } from "react-icons/fa";
+import api from './api'; // Importa o axios configurado
+import "./components/modal.css";
 
-function ProductList() {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [modalVisible, setModalVisible] = useState(false)
-  const [newProduct, setNewProduct] = useState({ name: "", price: "" })
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+function ProductList({ onLogout }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: "", price: "" });
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/products/")
-        const data = await response.json()
-        setProducts(data)
-        setLoading(false)
+        const response = await api.get('products/');
+        setProducts(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error("Erro ao buscar produtos:", error)
-        setLoading(false)
+        console.error("Erro ao buscar produtos:", error);
+        setLoading(false);
       }
-    }
+    };
 
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
-    if (modalVisible) setNewProduct({ name: "", price: "" })
-  }, [modalVisible])
+    if (modalVisible) setNewProduct({ name: "", price: "" });
+  }, [modalVisible]);
 
   const openModal = () => {
-    setModalVisible(true)
-    document.body.classList.add("modal-open")
-  }
+    setModalVisible(true);
+    document.body.classList.add("modal-open");
+  };
 
   const closeModal = () => {
-    setModalVisible(false)
-    document.body.classList.remove("modal-open")
-  }
+    setModalVisible(false);
+    document.body.classList.remove("modal-open");
+  };
 
   const openDeleteModal = (id) => {
-    setConfirmDeleteId(id)
-    setDeleteModalVisible(true)
-    document.body.classList.add("modal-open")
-  }
+    setConfirmDeleteId(id);
+    setDeleteModalVisible(true);
+    document.body.classList.add("modal-open");
+  };
 
   const closeDeleteModal = () => {
-    setConfirmDeleteId(null)
-    setDeleteModalVisible(false)
-    document.body.classList.remove("modal-open")
-  }
+    setConfirmDeleteId(null);
+    setDeleteModalVisible(false);
+    document.body.classList.remove("modal-open");
+  };
 
   const confirmDelete = async () => {
     try {
-      await fetch(`http://127.0.0.1:8000/api/products/${confirmDeleteId}/`, {
-        method: "DELETE",
-      })
-      setProducts(products.filter((product) => product.id !== confirmDeleteId))
-      closeDeleteModal()
+      await api.delete(`products/${confirmDeleteId}/`);
+      setProducts(products.filter((product) => product.id !== confirmDeleteId));
+      closeDeleteModal();
     } catch (error) {
-      console.error("Erro ao excluir produto:", error)
+      console.error("Erro ao excluir produto:", error);
     }
-  }
+  };
 
   const handleAddProduct = async () => {
     if (newProduct.name && newProduct.price) {
-      const price = Number.parseFloat(newProduct.price.replace(",", "."))
-      if (isNaN(price)) return
+      const price = Number.parseFloat(newProduct.price.replace(",", "."));
+      if (isNaN(price)) return;
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/products/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: newProduct.name,
-            price: price,
-          }),
-        })
-        const newProductData = await response.json()
-        setProducts([...products, newProductData])
-        setNewProduct({ name: "", price: "" })
-        setModalVisible(false)
-        document.body.classList.remove("modal-open")
+        const response = await api.post('products/', {
+          name: newProduct.name,
+          price: price,
+        });
+        setProducts([...products, response.data]);
+        setNewProduct({ name: "", price: "" });
+        setModalVisible(false);
+        document.body.classList.remove("modal-open");
       } catch (error) {
-        console.error("Erro ao adicionar produto:", error)
+        console.error("Erro ao adicionar produto:", error);
       }
     }
-  }
+  };
 
   const formatPrice = (price) => {
     return price.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
-    })
-  }
+    });
+  };
 
   return (
     <div className="product-list-container">
@@ -108,6 +99,7 @@ function ProductList() {
           </div>
           <p className="header-subtitle">Sistema de Gestão de Produtos Agrícolas</p>
         </div>
+        <button className="logout-button" onClick={onLogout}>Sair</button>
       </header>
 
       <main className="product-main">
@@ -191,9 +183,9 @@ function ProductList() {
                   type="text"
                   value={newProduct.price}
                   onChange={(e) => {
-                    const value = e.target.value
+                    const value = e.target.value;
                     if (/^[0-9]*[.,]?[0-9]*$/.test(value) || value === "") {
-                      setNewProduct({ ...newProduct, price: value })
+                      setNewProduct({ ...newProduct, price: value });
                     }
                   }}
                   placeholder="Ex: 120.00"
@@ -230,7 +222,7 @@ function ProductList() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default ProductList
+export default ProductList;
