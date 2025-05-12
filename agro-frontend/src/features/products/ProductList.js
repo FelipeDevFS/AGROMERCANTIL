@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
-import { FaPlus, FaTrash, FaLeaf, FaSignOutAlt } from "react-icons/fa"; // Adiciona FaSignOutAlt
-import api from './api';
-import "./components/modal.css";
-import Modal from './components/modal'; // Corrige o caminho do import (assumindo que está em src/components/Modal.js)
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { FaPlus, FaTrash, FaLeaf, FaSignOutAlt } from "react-icons/fa";
+import {
+  fetchProducts,
+  addProduct,
+  deleteProduct,
+} from "./productsSlice"; // Ações e reducers do slice de produtos
+import Modal from "../../components/modal";
+import "../../../src/index.css";
+import { FixedSizeList as List } from "react-window"; // Importando o react-window para renderizar grandes listas de forma otimizada
 
 function ProductList({ onLogout }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch(); // Hook para acessar o dispatch do Redux
+  const { items: products, loading, error } = useSelector((state) => state.products); 
+  // useSelector para acessar o estado dos produtos da store do Redux
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [newProduct, setNewProduct] = useState({ name: "", price: "" });
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -14,27 +22,22 @@ function ProductList({ onLogout }) {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Carrega os produtos ao inicializar o componente
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await api.get('products/');
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
+    dispatch(fetchProducts()) // Chama a ação do Redux para buscar os produtos
+      .unwrap() // Permite que possamos tratar erros com try/catch
+      .catch(() => {
         setErrorMessage('Erro ao buscar produtos. Tente novamente mais tarde.');
         setErrorModalVisible(true);
-        setLoading(false);
-      }
-    };
+      });
+  }, [dispatch]);
 
-    fetchProducts();
-  }, []);
-
+  // Reseta os campos do formulário quando o modal de adicionar produto for fechado
   useEffect(() => {
     if (modalVisible) setNewProduct({ name: "", price: "" });
   }, [modalVisible]);
 
+  // Funções de abrir e fechar os modais
   const openModal = () => {
     setModalVisible(true);
     document.body.classList.add("modal-open");
@@ -57,46 +60,43 @@ function ProductList({ onLogout }) {
     document.body.classList.remove("modal-open");
   };
 
-  const confirmDelete = async () => {
-    try {
-      await api.delete(`products/${confirmDeleteId}/`);
-      setProducts(products.filter((product) => product.id !== confirmDeleteId));
-      closeDeleteModal();
-    } catch (error) {
-      console.error("Erro ao excluir produto:", error);
-      setErrorMessage('Erro ao excluir o produto. Tente novamente.');
-      setErrorModalVisible(true);
-    }
-  };
-
-  const handleAddProduct = async () => {
-    if (newProduct.name && newProduct.price) {
-      const price = Number.parseFloat(newProduct.price.replace(",", "."));
-      if (isNaN(price)) return;
-
-      try {
-        const response = await api.post('products/', {
-          name: newProduct.name,
-          price: price,
-        });
-        setProducts([...products, response.data]);
-        setNewProduct({ name: "", price: "" });
-        setModalVisible(false);
-        document.body.classList.remove("modal-open");
-      } catch (error) {
-        console.error("Erro ao adicionar produto:", error);
-        setErrorMessage('Erro ao adicionar o produto. Verifique os dados e tente novamente.');
+  const confirmDelete = () => {
+    // Chama a ação Redux para excluir o produto
+    dispatch(deleteProduct(confirmDeleteId))
+      .unwrap()
+      .then(closeDeleteModal)
+      .catch(() => {
+        setErrorMessage('Erro ao excluir o produto. Tente novamente.');
         setErrorModalVisible(true);
-      }
+      });
+  };
+
+  const handleAddProduct = () => {
+    if (newProduct.name && newProduct.price) {
+      const price = parseFloat(newProduct.price.replace(",", "."));
+      if (isNaN(price)) return; // Validação de preço para garantir que é um número
+
+      // Chama a ação Redux para adicionar o produto
+      dispatch(addProduct({ name: newProduct.name, price }))
+        .unwrap()
+        .then(() => {
+          setNewProduct({ name: "", price: "" });
+          setModalVisible(false);
+          document.body.classList.remove("modal-open");
+        })
+        .catch(() => {
+          setErrorMessage('Erro ao adicionar o produto. Verifique os dados.');
+          setErrorModalVisible(true);
+        });
     }
   };
 
-  const formatPrice = (price) => {
-    return price.toLocaleString("pt-BR", {
+  // Formata o preço para o padrão monetário BR
+  const formatPrice = (price) =>
+    price.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
     });
-  };
 
   const closeErrorModal = () => {
     setErrorModalVisible(false);
@@ -149,19 +149,42 @@ function ProductList({ onLogout }) {
                         </td>
                       </tr>
                     ) : (
-                      products.map((product) => (
-                        <tr key={product.id}>
-                          <td>{product.id}</td>
-                          <td>{product.name}</td>
-                          <td className="price-cell">{formatPrice(product.price)}</td>
-                          <td className="actions-cell">
-                            <button className="delete-button" onClick={() => openDeleteModal(product.id)}>
-                              <FaTrash className="button-icon" />
-                              <span>Excluir</span>
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                      <tr>
+                        <td colSpan={4} style={{ padding: 0, border: "none" }}>
+                          {/* Usando o react-window para renderizar a lista de produtos */}
+                          <List
+                            height={400} // Define a altura visível da lista de produtos
+                            itemCount={products.length} // Total de itens na lista
+                            itemSize={50} // Altura de cada item na lista
+                            width="100%" // Largura da lista
+                          >
+                            {({ index, style }) => {
+                              const product = products[index];
+                              return (
+                                <div style={style} key={product.id}>
+                                  <table style={{ width: "100%"}}>
+                                    <tbody>
+                                      <tr>
+                                        <td>{product.id}</td>
+                                        <td>{product.name}</td>
+                                        <td className="price-cell">{formatPrice(product.price)}</td>
+                                        <td className="actions-cell">
+                                          <button
+                                            className="delete-button"
+                                            onClick={() => openDeleteModal(product.id)}
+                                          >
+                                            <FaTrash className="button-icon" /> <span>Excluir</span>
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              );
+                            }}
+                          </List>
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </table>
@@ -171,9 +194,9 @@ function ProductList({ onLogout }) {
         </div>
       </main>
 
-      {/* Modal de Adicionar Produto */}
+      {/* Modais */}
       {modalVisible && (
-        <div id="productModal" className="modal-overlay">
+        <div className="modal-overlay">
           <div className="modal-container">
             <div className="modal-header">
               <h3>Adicionar Novo Produto</h3>
@@ -216,9 +239,8 @@ function ProductList({ onLogout }) {
         </div>
       )}
 
-      {/* Modal de Confirmação de Exclusão */}
       {deleteModalVisible && (
-        <div id="deleteModal" className="modal-overlay">
+        <div className="modal-overlay">
           <div className="modal-container">
             <div className="modal-header">
               <h3>Confirmar Exclusão</h3>
@@ -235,14 +257,8 @@ function ProductList({ onLogout }) {
         </div>
       )}
 
-      {/* Modal de Erro */}
-      <Modal
-        isOpen={errorModalVisible}
-        onClose={closeErrorModal}
-        message={errorMessage}
-      />
+      <Modal isOpen={errorModalVisible} onClose={closeErrorModal} message={errorMessage} />
 
-      {/* Botão de Logout no final da página */}
       <footer className="logout-footer">
         <button className="logout-button" onClick={onLogout}>
           <FaSignOutAlt className="logout-icon" /> Logout

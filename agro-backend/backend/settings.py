@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +25,26 @@ SECRET_KEY = 'django-insecure-st3nnahz$mt)(#-8--#49nme5516w@s1oo2zk_b=7eyt4^m%6a
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'logstash': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.SocketHandler',
+            'host': 'localhost',  # Altere para o seu servidor Logstash
+            'port': 5959,  # Porta do Logstash
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logstash'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 ALLOWED_HOSTS = []
 
@@ -48,6 +69,15 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-agro-cache',
+    }
+}
+
 
 from datetime import timedelta
 

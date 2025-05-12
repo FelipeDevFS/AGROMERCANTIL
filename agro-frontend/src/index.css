@@ -126,6 +126,7 @@ body {
 .products-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Isso vai fazer as células terem um tamanho fixo */
 }
 
 .products-table th,
@@ -139,6 +140,27 @@ body {
   background-color: #f1f8e9;
   font-weight: 600;
   color: #33691e;
+}
+
+/* Defina larguras fixas para as colunas se necessário */
+.products-table th:nth-child(1),
+.products-table td:nth-child(1) {
+  width: 10%;
+}
+
+.products-table th:nth-child(2),
+.products-table td:nth-child(2) {
+  width: 40%;
+}
+
+.products-table th:nth-child(3),
+.products-table td:nth-child(3) {
+  width: 30%;
+}
+
+.products-table th:nth-child(4),
+.products-table td:nth-child(4) {
+  width: 20%;
 }
 
 .price-cell {
@@ -313,4 +335,26 @@ body {
 .logout-icon {
   width: 1rem;
   height: 1rem;
+}
+
+/* Ajustes específicos para a tabela com react-window */
+.table-container .react-window-row {
+  display: flex;
+  width: 100%;
+}
+
+.table-container .react-window-row div {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table-container .react-window-row .price-cell {
+  text-align: right;
+}
+
+.table-container .react-window-row .actions-cell {
+  text-align: center;
+  width: 100px;
 }

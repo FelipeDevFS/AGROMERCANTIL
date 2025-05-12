@@ -1,3 +1,4 @@
+
 # AgroMercantil
 
 Projeto desenvolvido como parte da avaliação técnica para a vaga de Desenvolvedor Front‑End, implementando um sistema de gestão de produtos agrícolas com frontend em React e backend em Django.
@@ -29,9 +30,9 @@ agro-backend/       # API em Django para gerenciar produtos
 │   └── urls.py          # Rotas principais da API
 ├── products/
 │   ├── models.py        # Modelo Product
-   ├── views.py         # Views da API (List, Create, Delete)
-   ├── urls.py          # Rotas da app products
-   └── tests.py         # Testes unitários da API
+│   ├── views.py         # Views da API (List, Create, Delete)
+│   ├── urls.py          # Rotas da app products
+│   └── tests.py         # Testes unitários da API
 └── <outros arquivos Django>
 ```
 
@@ -56,7 +57,7 @@ Antes de começar, certifique-se de ter instalado:
 2. Ative o ambiente virtual:
    - No Windows:
      ```bash
-     venv\Scriptsctivate
+     venv\Scripts\activate
      ```
    - No Linux/macOS:
      ```bash
@@ -66,10 +67,6 @@ Antes de começar, certifique-se de ter instalado:
    ```bash
    pip install -r requirements.txt
    ```
-   > Se `requirements.txt` não existir, gere-o:
-   > ```bash
-   > pip freeze > requirements.txt
-   > ```
 4. Aplique as migrações:
    ```bash
    python manage.py migrate
@@ -86,7 +83,6 @@ Antes de começar, certifique-se de ter instalado:
    ```bash
    python manage.py runserver
    ```
-   O back‑end estará disponível em: `http://127.0.0.1:8000/`
 
 8. (Opcional) Execute os testes unitários do backend:
    ```bash
@@ -107,7 +103,7 @@ Antes de começar, certifique-se de ter instalado:
    ```bash
    npm start
    ```
-   O front‑end estará disponível em: `http://localhost:3000/`
+
 4. (Opcional) Execute os testes unitários do frontend:
    ```bash
    npm test
@@ -118,43 +114,51 @@ Antes de começar, certifique-se de ter instalado:
 ### Questão 1: Interface em React — ✅ Concluída
 - Construção da interface usando React e Bootstrap.
 - Tabela de produtos, criação e exclusão via modal de confirmação.
-- Dados mockados inicialmente, substituídos pela API.
 
 ### Questão 2: Integração Front‑End e Back‑End — ✅ Concluída
 - API em Django com endpoints para listar, adicionar e excluir produtos.
 - Validações no backend para campos obrigatórios.
 - Configuração de CORS para comunicação entre frontend e backend.
-- Integração via `fetch` e testes unitários da API.
 
 ### Questão 3: Testes de Componentes em React — ✅ Concluída
 - Testes unitários com Jest e React Testing Library.
 - Cobertura de renderização, adição e exclusão de produtos.
-- Uso de mocks para simular chamadas à API.
 
 ### Questão 4: Autenticação e Autorização — ✅ Concluída
-- Implementação de JWT no Django com `djangorestframework-simplejwt`.
-- Proteção das rotas de API com `permissions.IsAuthenticated`.
-- Endpoint `/api/login/` para emissão de tokens JWT.
-- Interceptor Axios no frontend para gerenciar header `Authorization`.
-- Rotas seguras com `react-router-dom` para `/login` e `/products`.
+- JWT com `djangorestframework-simplejwt`.
+- Interceptor Axios no frontend para token.
+- Rotas protegidas no React com `react-router-dom`.
 
-> **Desafios e Soluções**
-> - *Erro de migração* (`no such table: auth_user`): resolvido executando `python manage.py migrate` até completar todas as migrações.
-> - *Problema de 401 no frontend*: implementado interceptor no Axios para anexar token JWT nas requisições.
-> - *Alerts nativos para erros*: planejado substituí-los por modais personalizados para melhorar UX.
+### Questão 5: Estilização Responsiva — ✅ Concluída
+- Design adaptado para desktop e mobile.
 
-### Próximas Tarefas — ☐ Em Andamento
-- **Questão 5: Estilização Responsiva** — Adaptar telas para diferentes tamanhos.
-- **Questão 6: Gerenciamento de Estado Global** — Avaliar Context API ou Redux.
-- **Questão 7: Implementação de Cache** — Cache de resultados no backend (Redis/Django cache).
-- **Questão 8: Otimização de Performance** — Lazy loading e memoization no frontend.
-- **Questão 9: Monitoramento e Logs** — Configurar Sentry e logs estruturados no backend.
-- **Questão 10: Deploy em Produção** — Dockerização e CI/CD.
-- **Desafio Extra**: Deploy com Docker Compose e documentação de infraestrutura.
+### Questão 6: Gerenciamento de Estado Global — ✅ Concluída
+- Redux Toolkit para centralizar estado dos produtos e autenticação.
+
+### Questão 7: Implementação de Cache — ✅ Concluída
+- Uso de cache com `django.core.cache` para otimizar performance.
+
+### Questão 8: Otimização de Performance — ✅ Concluída
+- Lazy loading de componentes.
+- Uso de `React-Window` e otimização de renderizações.
+
+### Questão 9: Monitoramento e Logs — ✅ Concluída
+- Logs estruturados no backend.
+- Implementação do ELK Stack para rastreio de erros.
+
+### Questão 10: Deploy em Produção — ✅ Concluída
+- Dockerização com dois Dockerfiles (frontend e backend).
+- Orquestração com Docker Compose.
+
+### Desafio Extra — ✅ Concluído
+- Deploy completo com Docker Compose.
+- Documentação de infraestrutura no repositório.
 
 ## Decisões Técnicas
+
 - **Axios com Interceptor**: centraliza requisições HTTP, gerencia `Authorization` e trata erros globalmente.
-- **React Router**: controla rotas públicas e privadas (login vs. área de produtos).
+- **React Router**: controla rotas públicas e privadas.
+- **Redux Toolkit**: gerenciamento centralizado de estado.
 - **Testing Library & Jest**: foco em testes de integração de componentes e lógica de autenticação.
 
 ## Testes
