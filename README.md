@@ -1,174 +1,152 @@
-
 # AgroMercantil
 
-Projeto desenvolvido como parte da avaliação técnica para a vaga de Desenvolvedor Front‑End, implementando um sistema de gestão de produtos agrícolas com frontend em React e backend em Django.
+Projeto desenvolvido como parte da **avaliação técnica para a vaga de Desenvolvedor Front-End**, implementando um sistema completo de gestão de produtos agrícolas, com:
+
+- **Frontend** em React
+- **Backend** em Django REST Framework
+- **Gerenciamento de estado** com Redux Toolkit
+- **Autenticação JWT**
+- **Testes unitários** no frontend e backend
+- **Dockerização e Deploy** com Docker Compose
 
 ## Repositório
 
-O código-fonte completo está disponível em:
+O código-fonte está disponível em:
 
-- https://github.com/FelipeDevFS/AGROMERCANTIL
+- [https://github.com/FelipeDevFS/AGROMERCANTIL](https://github.com/FelipeDevFS/AGROMERCANTIL)
 
 ## Estrutura do Projeto
 
 ```
-agro-frontend/      # Aplicação React para interface do usuário
+agro-frontend/      # Interface do usuário em React
 ├── public/
 ├── src/
-│   ├── api.js           # Configuração do Axios com interceptor
-│   ├── App.js           # Componente principal com roteamento
-│   ├── ProductList.js   # Componente para listar e gerenciar produtos
-│   ├── Login.js         # Componente para autenticação
-│   └── components/      # Componentes de UI (modais, botões etc.)
+│   ├── api.js           # Configuração do Axios
+│   ├── App.js           # Componente principal
+│   ├── Login.js         # Autenticação
+│   ├── components/      # Componentes UI (modais, botões, etc.)
+│   ├── features/        # Lógica de negócio e estado
+│   │   └── products/
+│   │       ├── ProductList.js  # Componente para gestão de produtos
+│   │       └── productsSlice.js # Reducer e ações Redux
+│   |
+│   └── ProductList.test.js # Testes do ProductList
 └── package.json
 
-agro-backend/       # API em Django para gerenciar produtos
+agro-backend/       # API em Django
 ├── manage.py
 ├── requirements.txt
 ├── backend/
-│   ├── settings.py      # Configurações do Django (incluindo CORS e JWT)
-│   └── urls.py          # Rotas principais da API
+│   ├── settings.py  # Configurações
+│   └── urls.py      # Rotas principais
 ├── products/
-│   ├── models.py        # Modelo Product
-│   ├── views.py         # Views da API (List, Create, Delete)
-│   ├── urls.py          # Rotas da app products
-│   └── tests.py         # Testes unitários da API
-└── <outros arquivos Django>
+│   ├── models.py    # Modelo Product
+│   ├── views.py     # Lógica da API
+│   ├── urls.py      # Rotas da API
+│   └── tests.py     # Testes
+└── <outros arquivos>
 ```
 
-## Pré-requisitos
+## Tecnologias Utilizadas
 
-Antes de começar, certifique-se de ter instalado:
-
-- **Node.js** (versão 14 ou superior)
-- **Python 3.8** ou superior
-- **pip**
-- **Git**
+- **React**, **React Router DOM**, **Redux Toolkit**, **Bootstrap**
+- **Axios** com Interceptor para token JWT
+- **Django**, **Django REST Framework**, **Simple JWT**
+- **Jest** e **React Testing Library** para testes
+- **Docker e Docker Compose** para ambiente de produção
+- **ELK Stack** para logs e monitoramento
 
 ## Como Executar
 
-### Back‑End (Django)
+### Back-End (Django)
 
-1. Clone o repositório e entre na pasta:
-   ```bash
-   git clone https://github.com/FelipeDevFS/AGROMERCANTIL.git
-   cd agro-backend
-   ```
-2. Ative o ambiente virtual:
-   - No Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-   - No Linux/macOS:
-     ```bash
-     source venv/bin/activate
-     ```
-3. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Aplique as migrações:
-   ```bash
-   python manage.py migrate
-   ```
-5. (Opcional) Popule o banco de dados com dados iniciais:
-   ```bash
-   python manage.py seed_data
-   ```
-6. Crie um superusuário para testes:
-   ```bash
-   python manage.py createsuperuser
-   ```
-7. Inicie o servidor Django:
-   ```bash
-   python manage.py runserver
-   ```
+```bash
+git clone https://github.com/FelipeDevFS/AGROMERCANTIL.git
+cd agro-backend
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
 
-8. (Opcional) Execute os testes unitários do backend:
-   ```bash
-   python manage.py test
-   ```
+(Opcional)
+```bash
+python manage.py seed_data      # Popular banco com dados
+python manage.py test           # Executar testes unitários
+```
 
-### Front‑End (React)
+### Front-End (React)
 
-1. Navegue até a pasta do front‑end:
-   ```bash
-   cd agro-frontend
-   ```
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
-3. Inicie o servidor de desenvolvimento:
-   ```bash
-   npm start
-   ```
+```bash
+cd agro-frontend
+npm install
+npm start
+```
 
-4. (Opcional) Execute os testes unitários do frontend:
-   ```bash
-   npm test
-   ```
+(Opcional)
+```bash
+npm test      # Executar testes unitários
+```
 
-## Progresso e Competências
+## Funcionalidades Implementadas
 
-### Questão 1: Interface em React — ✅ Concluída
-- Construção da interface usando React e Bootstrap.
-- Tabela de produtos, criação e exclusão via modal de confirmação.
+### 1. Interface em React
+- Tabela responsiva com produtos
+- Criação e exclusão via modais
 
-### Questão 2: Integração Front‑End e Back‑End — ✅ Concluída
-- API em Django com endpoints para listar, adicionar e excluir produtos.
-- Validações no backend para campos obrigatórios.
-- Configuração de CORS para comunicação entre frontend e backend.
+### 2. Integração Front e Back-End
+- API com endpoints para CRUD
+- Validações no backend
+- CORS configurado
 
-### Questão 3: Testes de Componentes em React — ✅ Concluída
-- Testes unitários com Jest e React Testing Library.
-- Cobertura de renderização, adição e exclusão de produtos.
+### 3. Testes Unitários
+- Backend: testes no CRUD
+- Frontend: fluxo de login e produtos
 
-### Questão 4: Autenticação e Autorização — ✅ Concluída
-- JWT com `djangorestframework-simplejwt`.
-- Interceptor Axios no frontend para token.
-- Rotas protegidas no React com `react-router-dom`.
+### 4. Autenticação JWT
+- Login com token
+- Proteção de rotas
+- Axios Interceptor
 
-### Questão 5: Estilização Responsiva — ✅ Concluída
-- Design adaptado para desktop e mobile.
+### 5. Design Responsivo
+- Layout adaptado a dispositivos
 
-### Questão 6: Gerenciamento de Estado Global — ✅ Concluída
-- Redux Toolkit para centralizar estado dos produtos e autenticação.
+### 6. Estado Global
+- Redux Toolkit para produtos e autenticação
 
-### Questão 7: Implementação de Cache — ✅ Concluída
-- Uso de cache com `django.core.cache` para otimizar performance.
+### 7. Cache e Performance
+- Cache com `django.core.cache`
+- Lazy loading + React Window
 
-### Questão 8: Otimização de Performance — ✅ Concluída
-- Lazy loading de componentes.
-- Uso de `React-Window` e otimização de renderizações.
+### 8. Logs e Monitoramento
+- Logs estruturados
+- Integração com ELK Stack
 
-### Questão 9: Monitoramento e Logs — ✅ Concluída
-- Logs estruturados no backend.
-- Implementação do ELK Stack para rastreio de erros.
+### 9. Docker e Deploy
+- Dockerfiles separados (frontend/backend)
+- Docker Compose para orquestração
 
-### Questão 10: Deploy em Produção — ✅ Concluída
-- Dockerização com dois Dockerfiles (frontend e backend).
-- Orquestração com Docker Compose.
-
-### Desafio Extra — ✅ Concluído
-- Deploy completo com Docker Compose.
-- Documentação de infraestrutura no repositório.
+### 10. Desafio Extra
+- Deploy completo documentado
 
 ## Decisões Técnicas
 
-- **Axios com Interceptor**: centraliza requisições HTTP, gerencia `Authorization` e trata erros globalmente.
-- **React Router**: controla rotas públicas e privadas.
-- **Redux Toolkit**: gerenciamento centralizado de estado.
-- **Testing Library & Jest**: foco em testes de integração de componentes e lógica de autenticação.
+- **Axios com Interceptor**: centraliza autenticação e erros
+- **React Router DOM**: controle de rotas privadas
+- **Redux Toolkit**: gestão simples e eficiente de estado
+- **Testing Library & Jest**: cobertura de funcionalidades essenciais
 
 ## Testes
 
-- **Backend**: testes unitários em `products/tests.py` cobrindo CRUD de produtos.
-- **Frontend**: testes em `agro-frontend/src/__tests__/` cobrindo fluxo de login e gestão de produtos.
+- **Backend**: `products/tests.py`
+- **Frontend**: `src/ProductList.test.js`
 
 ## Contato
 
-Em caso de dúvidas ou sugestões, entre em contato:
-
-- Email: `felipeolcarvalho1@gmail.com`
-- GitHub: https://github.com/FelipeDevFS/AGROMERCANTIL
+- Email: felipeolcarvalho1@gmail.com
+- GitHub: [FelipeDevFS](https://github.com/FelipeDevFS/AGROMERCANTIL)
