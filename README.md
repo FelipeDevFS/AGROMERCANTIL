@@ -49,12 +49,25 @@ agro-backend/       # API em Django
 
 ## Tecnologias Utilizadas
 
-- **React**, **React Router DOM**, **Redux Toolkit**, **Bootstrap**
-- **Axios** com Interceptor para token JWT
-- **Django**, **Django REST Framework**, **Simple JWT**
-- **Jest** e **React Testing Library** para testes
-- **Docker e Docker Compose** para ambiente de produção
-- **ELK Stack** para logs e monitoramento
+## Tecnologias Utilizadas
+
+- **React, React Router DOM, Redux Toolkit, Bootstrap**  
+  Para criar a interface de usuário, gerenciar rotas, centralizar o estado e estilizar a aplicação.
+
+- **Axios com Interceptor para token JWT**  
+  Para fazer requisições HTTP ao backend e gerenciar autenticação.
+
+- **Django, Django REST Framework, Simple JWT**  
+  Django é o framework backend para criar a API. O Django REST Framework (DRF) é usado para implementar as operações CRUD (Create, Read, Update, Delete) de forma eficiente, com ViewSets que simplificam a criação de endpoints para listar, adicionar, atualizar e excluir produtos. O Simple JWT é usado para autenticação baseada em tokens.
+
+- **Jest e React Testing Library para testes**  
+  Para testar os componentes React e garantir que a interface funcione como esperado.
+
+- **Docker e Docker Compose para ambiente de produção**  
+  Para facilitar o deploy e execução da aplicação em diferentes ambientes.
+
+- **ELK Stack para logs e monitoramento**  
+  Para rastrear erros e monitorar o desempenho da aplicação.
 
 ## Como Executar
 
