@@ -89,7 +89,6 @@ python manage.py runserver
 
 (Opcional)
 ```bash
-python manage.py seed_data      # Popular banco com dados
 python manage.py test           # Executar testes unitários
 ```
 

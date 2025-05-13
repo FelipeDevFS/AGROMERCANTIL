@@ -33,16 +33,29 @@ LOGGING = {
         'logstash': {
             'level': 'ERROR',
             'class': 'logging.handlers.SocketHandler',
-            'host': 'localhost',  # Altere para o seu servidor Logstash
-            'port': 5959,  # Porta do Logstash
+            'host': 'localhost',
+            'port': 5959,
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
         'django': {
             'handlers': ['logstash'],
             'level': 'ERROR',
             'propagate': True,
         },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
     },
 }
 
@@ -97,6 +110,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'backend.middleware.LogAllRequestsMiddleware'
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
